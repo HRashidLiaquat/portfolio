@@ -1,0 +1,58 @@
+---
+const { title, type, role, status, summary, tags = [], metrics, details, path, flow, image, link } = Astro.props;
+const meta = [type, role, status].filter(Boolean).join(", ");
+const results = metrics ? [
+  metrics.train && ["Train accuracy", metrics.train],
+  metrics.test && ["Test accuracy", metrics.test],
+  metrics.validation && ["Validation accuracy", metrics.validation],
+  metrics.loss && ["Final training loss", metrics.loss],
+  metrics.epochs && ["Epochs", metrics.epochs],
+].filter(Boolean) : [];
+---
+<article class="entry">
+  <div class="body">
+    <h3>{link ? <a href={link} target="_blank" rel="noopener">{title}</a> : title}</h3>
+    <p class="meta">{meta}</p>
+    <p class="summary">{summary}</p>
+    {flow && (<p class="flow"><span>Pipeline:</span> {flow.map((f) => f.title).join(", ")}.</p>)}
+    {results.length > 0 && (<p class="results">{results.map(([k, v]) => <span><b>{v}</b> {k.toLowerCase()}</span>)}</p>)}
+    <p class="tags">{tags.join(", ")}</p>
+    {(details || path || flow) && (
+      <details>
+        <summary>Details</summary>
+        {flow && (
+          <ol class="steps">{flow.map((f) => <li><b>{f.title}.</b> {f.note}</li>)}</ol>
+        )}
+        {details && (<dl>{details.map((d) => <><dt>{d.label}</dt><dd>{d.text}</dd></>)}</dl>)}
+        {path && (
+          <dl class="road">{path.map((st) => <><dt>{st.stage} ({st.state.toLowerCase()})</dt><dd>{st.text}</dd></>)}</dl>
+        )}
+      </details>
+    )}
+  </div>
+  {image && (<figure><img src={image.src} alt={image.alt} loading="lazy" /><figcaption>{image.caption}</figcaption></figure>)}
+</article>
+<style>
+  .entry { display: grid; grid-template-columns: 1fr 230px; gap: 1.6rem; padding: 1.6rem 0; border-top: 1px solid var(--line); }
+  .entry:first-of-type { border-top: 0; padding-top: .4rem; }
+  h3 { font-family: var(--serif); font-weight: 600; font-size: 1.3rem; line-height: 1.3; margin: 0; }
+  h3 a { color: var(--ink); text-decoration-color: var(--accent); text-decoration-thickness: 1.5px; }
+  .meta { margin: .15rem 0 .6rem; color: var(--muted); font-size: .92rem; }
+  .summary { margin: 0 0 .6rem; max-width: 40em; }
+  .flow { margin: 0 0 .6rem; font-size: .95rem; color: var(--muted); }
+  .flow span { color: var(--ink); font-weight: 500; }
+  .results { display: flex; flex-wrap: wrap; gap: .2rem 1.4rem; margin: 0 0 .5rem; font-size: .95rem; }
+  .results b { font-weight: 600; }
+  .tags { margin: 0 0 .4rem; font-size: .9rem; color: var(--muted); }
+  details { margin-top: .4rem; }
+  summary { cursor: pointer; color: var(--accent); font-weight: 500; font-size: .95rem; }
+  dl { margin: .8rem 0 0; font-size: .96rem; max-width: 40em; }
+  dt { font-weight: 600; margin-top: .6rem; }
+  dd { margin: 0; color: var(--muted); }
+  .steps { margin: .8rem 0 0; padding-left: 1.2rem; font-size: .96rem; color: var(--muted); }
+  .steps b { color: var(--ink); font-weight: 600; }
+  figure { margin: 0; }
+  figure img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: 4px; display: block; background: #fff; }
+  figcaption { font-size: .82rem; color: var(--muted); margin-top: .3rem; }
+  @media (max-width: 760px) { .entry { grid-template-columns: 1fr; } figure { max-width: 320px; } }
+</style>

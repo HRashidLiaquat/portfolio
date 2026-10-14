@@ -1,0 +1,150 @@
+---
+import Base from "../layouts/Base.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import { research, projects, links, profile, skills, education, help, embedded } from "../data/projects.js";
+---
+<Base title="Rashid Liaquat, AI researcher" description="Rashid Liaquat is an MS AI student at Superior University working on road-safety computer vision and embedded AI. Open to research collaboration.">
+  <div class="wrap">
+    <nav class="top" aria-label="Sections">
+      <a class="name" href="#top">Rashid Liaquat</a>
+      <ul>
+        <li><a href="#research">Research</a></li><li><a href="#projects">Projects</a></li><li><a href="#skills">Skills</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <header id="top" class="hero">
+      <div>
+        <h1>Rashid Liaquat</h1>
+        <p class="role">AI researcher, computer vision and embedded AI</p>
+        <p class="lead">I build models that help vehicles read the road. My MS AI thesis predicts unmarked speed breakers and potholes on Pakistani roads before a rider reaches them. My next focus is embedded AI, and I am open to research collaboration on it.</p>
+        <p class="actions">
+          <a class="btn" href="#contact">Get in touch</a>
+          {profile.email && <a class="btn ghost" href={`https://mail.google.com/mail/?view=cm&to=${profile.email}`} target="_blank" rel="noopener">Email me</a>}
+          {profile.cvUrl && <a class="btn ghost" href={profile.cvUrl} download>Download CV</a>}
+        </p>
+        <p class="plinks">{links.map((l, i) => <><a href={l.href} target="_blank" rel="noopener">{l.label}</a>{i < links.length - 1 ? " " : ""}</>)}</p>
+      </div>
+      {profile.photoUrl
+        ? <img class="photo" src={profile.photoUrl} alt="Portrait of Rashid Liaquat" width="160" height="160" />
+        : <div class="photo ph" aria-hidden="true">RL</div>}
+    </header>
+
+    <main>
+      <section id="research">
+        <h2>Research</h2>
+        <div class="col">
+          <p class="note">Umer Farooq and I work on both projects together. We each write our own thesis. The papers and products are shared, with first authorship alternating between us.</p>
+          {research.map((p) => <ProjectCard {...p} />)}
+        </div>
+      </section>
+
+      <section id="embedded">
+        <h2>Current focus</h2>
+        <div class="col prose">
+          <h3 class="ph3">Embedded AI</h3>
+          <p>{embedded.lead}</p>
+          <p><strong>Why on the device.</strong> {embedded.why}</p>
+          <p><strong>How it connects to my thesis.</strong> {embedded.thesis}</p>
+          <p class="note">{embedded.state}</p>
+        </div>
+      </section>
+
+      <section id="projects">
+        <h2>Projects</h2>
+        <div class="col">
+          <p class="note">Each notebook is open on GitHub. Figures come from the final run saved in each notebook.</p>
+          {projects.map((p) => <ProjectCard {...p} />)}
+        </div>
+      </section>
+
+      <section id="skills">
+        <h2>Skills</h2>
+        <div class="col prose">
+          {skills.map((g) => <p><strong>{g.group}.</strong> {g.items.join(", ")}.</p>)}
+          <h3 class="ph3">Where I can contribute</h3>
+          <ul class="help">{help.map((h) => <li><strong>{h.title}.</strong> {h.text}</li>)}</ul>
+        </div>
+      </section>
+
+      <section id="about">
+        <h2>About</h2>
+        <div class="col prose">
+          <p>I am an MS AI student at Superior University, Lahore (full name: Hafiz Muhammad Rashid). My work so far covers image classification with CNNs and Vision Transformers, and sequence models. I am now moving into sensor fusion, self-supervised learning and embedded AI for road safety.</p>
+          {education.map((e) => <p><strong>{e.what}</strong>, {e.where}. {e.note} Thesis supervisor: <a href={e.supervisor.url} target="_blank" rel="noopener">{e.supervisor.name}</a> ({e.supervisor.role}). Co-supervisor and mentor: <a href={e.cosupervisor.url} target="_blank" rel="noopener">{e.cosupervisor.name}</a> ({e.cosupervisor.role}).</p>)}
+        </div>
+      </section>
+
+      <section id="contact">
+        <h2>Contact</h2>
+        <div class="col prose">
+          <p>I am open to research collaboration, especially on embedded and edge-based AI, and to AI and machine learning internships. If you have a project or an opening, send me a message.</p>
+          <dl class="reach">
+            {profile.email && (<><dt>Email</dt><dd><span id="mail">{profile.email}</span> <button type="button" class="copy" data-copy={profile.email}>Copy</button> <a href={`https://mail.google.com/mail/?view=cm&to=${profile.email}`} target="_blank" rel="noopener">Open in Gmail</a></dd></>)}
+            {profile.phone && (<><dt>Phone and WhatsApp</dt><dd>{profile.phoneShown} <a href={`tel:${profile.phone}`}>Call</a> <a href={`https://wa.me/${profile.phone.replace("+", "")}`} target="_blank" rel="noopener">WhatsApp</a></dd></>)}
+            <dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/rashid-liaquat" target="_blank" rel="noopener">linkedin.com/in/rashid-liaquat</a></dd>
+          </dl>
+          <p class="actions">
+            <a class="btn" href="https://www.linkedin.com/in/rashid-liaquat" target="_blank" rel="noopener">Message on LinkedIn</a>
+            {profile.cvUrl && <a class="btn ghost" href={profile.cvUrl} download>Download CV</a>}
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Datasets: PlantVillage and Fruits-360, used under their original licenses. Rashid Liaquat, 2026. <a href="#top">Back to top</a></p>
+    </footer>
+  </div>
+</Base>
+<script>
+  document.querySelectorAll('.copy').forEach((b) => {
+    b.addEventListener('click', async () => {
+      const v = b.getAttribute('data-copy') || '';
+      try { await navigator.clipboard.writeText(v); b.textContent = 'Copied'; }
+      catch { const r = document.createRange(); const n = document.getElementById('mail'); if (n) { r.selectNodeContents(n); const s = window.getSelection(); s?.removeAllRanges(); s?.addRange(r); } b.textContent = 'Selected, press Ctrl+C'; }
+      setTimeout(() => (b.textContent = 'Copy'), 2000);
+    });
+  });
+</script>
+<style>
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 1.2rem; }
+  .top { position: sticky; top: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .8rem 0; background: var(--paper); border-bottom: 1px solid var(--line); }
+  .name { font-family: var(--serif); font-weight: 600; font-size: 1.1rem; color: var(--ink); text-decoration: none; }
+  .top ul { list-style: none; display: flex; gap: 1.2rem; margin: 0; padding: 0; overflow-x: auto; white-space: nowrap; }
+  .top ul a { color: var(--muted); text-decoration: none; font-size: .95rem; }
+  .top ul a:hover { color: var(--ink); }
+  .hero { display: grid; grid-template-columns: 1fr 170px; gap: 2.5rem; align-items: start; padding: 3.2rem 0 2.6rem; }
+  h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(2.4rem, 6vw, 3.6rem); line-height: 1.08; margin: 0 0 .5rem; letter-spacing: -.01em; }
+  .role { margin: 0 0 1.1rem; font-size: 1.2rem; color: var(--muted); }
+  .lead { max-width: 36em; font-size: 1.1rem; margin: 0 0 1.3rem; }
+  .actions { display: flex; flex-wrap: wrap; gap: .6rem; margin: 0 0 1.2rem; }
+  .btn { display: inline-block; padding: .55rem 1.1rem; border-radius: 6px; background: var(--accent); color: var(--accent-ink); text-decoration: none; font-weight: 500; border: 1px solid var(--accent); }
+  .btn.ghost { background: transparent; color: var(--accent); }
+  .btn:hover { filter: brightness(1.1); }
+  .plinks { margin: 0; display: flex; flex-wrap: wrap; gap: .3rem 1.1rem; font-size: .95rem; }
+  .photo { width: 160px; height: 160px; border-radius: 6px; object-fit: cover; }
+  .ph { display: grid; place-items: center; background: var(--soft); border: 1px solid var(--line); font-family: var(--serif); font-size: 2.6rem; color: var(--muted); }
+  section { display: grid; grid-template-columns: 170px 1fr; gap: 2.5rem; padding: 2.4rem 0; border-top: 1px solid var(--line); }
+  h2 { font-family: var(--sans); font-size: .95rem; font-weight: 600; margin: .3rem 0 0; color: var(--muted); }
+  .col { min-width: 0; }
+  .prose p { margin: 0 0 1rem; max-width: 42em; }
+  .ph3 { font-family: var(--serif); font-weight: 600; font-size: 1.3rem; margin: 0 0 .5rem; }
+  .prose .ph3:not(:first-child) { margin-top: 1.6rem; }
+  .note { color: var(--muted); font-size: .95rem; margin: 0 0 1rem; max-width: 42em; }
+  .help { margin: 0; padding-left: 1.1rem; max-width: 42em; }
+  .help li { margin-bottom: .6rem; }
+  footer { padding: 1.6rem 0 2.6rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+  footer p { margin: 0; }
+  @media (max-width: 760px) {
+    .hero { grid-template-columns: 1fr; padding-top: 2rem; }
+    .photo { order: -1; width: 110px; height: 110px; }
+    section { grid-template-columns: 1fr; gap: .6rem; }
+    .top ul { gap: .9rem; }
+    .name { display: none; }
+  }
+  .reach { margin: 0 0 1.2rem; display: grid; grid-template-columns: 9.5rem 1fr; gap: .5rem 1rem; max-width: 42em; }
+  .reach dt { color: var(--muted); font-size: .95rem; }
+  .reach dd { margin: 0; display: flex; flex-wrap: wrap; gap: .3rem .9rem; align-items: baseline; }
+  .copy { font: inherit; font-size: .9rem; padding: .1rem .6rem; border: 1px solid var(--line); border-radius: 6px; background: var(--soft); color: var(--ink); cursor: pointer; }
+  @media (max-width: 760px) { .reach { grid-template-columns: 1fr; gap: .1rem; } .reach dd { margin-bottom: .6rem; } }
+</style>
